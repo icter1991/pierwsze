@@ -1,3 +1,3 @@
 # kilka slow komentarza
 
-print('Ahoj przygodo')
+print('Ahoj przygodo!')
