@@ -3,57 +3,73 @@ import requests
 import json
 
 
-auth = ('admin', 'admin')
+
+class Authorisation:
+
+    auth = ('admin', 'admin')
+
+    def __init__(self, name, password):
+        self.name = name
+        self.password = password
+
+    def authorisation_id(self):
+        pass
+
+class User(Authorisation):
 
 
-def authorisation_id():
-    pass
 
+    def __init__(self, uri, name, password):
 
-def get_users(host_id):
-    # Gets all users
+        self.uri = uri
+        self.name = name
+        self.password = password
 
-    r = requests.get('http://{}'.format(host_id), auth=auth)
-    string_of_users = r.json()
-    for element in string_of_users:
+    def get_users(self):
+        # Gets all users
 
-        return "ID: {} \t NAME: {}".format(element['id'], element['name'])
+        r = requests.get('http://{}'.format(self.uri), auth=self.auth)
+        string_of_users = r.json()
+        for element in string_of_users:
 
-def post_users(host_id, name, password):
-    # Adds new user
+            return "ID: {} \t NAME: {}".format(element['id'], element['name'])
 
-    payload = {'name': name, 'password': password}
-    r = requests.post('http://{}'.format(host_id), json=payload)
+    def post_users(self):
+        # Adds new user
 
-    return r.status_code == 200
+        payload = {'name': self.name, 'password': self.password}
+        r = requests.post('http://{}'.format(self.uri), json=payload)
 
-def get_user_id(host_id, name):
-    # Gets users ID after typing it's name
+        return r.status_code
 
-    list_of_code = []
-    r = requests.get('http://{}'.format(host_id), auth=auth)
-    string_of_users = r.json()
-    for element in string_of_users:
-        list_of_code.append(element['name'])
-        if name in list_of_code:
+    def get_user_id(self):
+        # Gets users ID after typing it's name
 
-            return element['id']
+        list_of_code = []
+        r = requests.get('http://{}'.format(self.uri), auth=self.auth)
+        string_of_users = r.json()
+        for element in string_of_users:
+            list_of_code.append(element['name'])
+            if self.name in list_of_code:
+                User.user_id = element['id']
+        return User.user_id
 
-def put_user_id(host_id, user_id, name, password):
-    # Modifies users password
+    def put_user_id(self):
+        # Modifies users password
 
-    payload = {'name': name, 'password': password}
-    r = requests.put('http://{}/{}'.format(host_id, user_id), auth=auth, data=json.dumps(payload))
+        payload = {'name': self.name, 'password': self.password}
+        r = requests.put('http://{}/{}'.format(self.uri, User.user_id), auth=self.auth, data=json.dumps(payload))
 
-    return r.status_code == 200
+        return r.status_code
 
-def delete_user(host_id, user_id, name, password):
-    # Extinguishes user for ever and ever!!!
+    def delete_user(self):
+        # Extinguishes user for ever and ever!!!
 
-    payload = {'name': name, 'password': password}
-    r = requests.delete('http://{}/{}'.format(host_id, user_id), auth=auth, data=json.dumps(payload))
+        payload = {'name': self.name, 'password': self.password}
+        r = requests.delete('http://{}/{}'.format(self.uri, User.user_id), auth=self.auth, data=json.dumps(payload))
 
-    return r.status_code == 200
+        return r.status_code
+
 
 
 
